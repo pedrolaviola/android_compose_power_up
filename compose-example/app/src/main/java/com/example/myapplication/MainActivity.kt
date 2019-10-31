@@ -14,11 +14,14 @@ import androidx.ui.engine.geometry.Radius
 import androidx.ui.engine.geometry.Shape
 import androidx.ui.foundation.Clickable
 import androidx.ui.foundation.SimpleImage
+import androidx.ui.foundation.VerticalScroller
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.surface.Card
+import androidx.ui.material.surface.Surface
 import androidx.ui.res.imageResource
+import androidx.ui.res.stringResource
 import androidx.ui.tooling.preview.Preview
 
 
@@ -56,37 +59,42 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun CreateView() {
     val count = +state { 1 }
-    MaterialTheme {
-        Column(
-            crossAxisSize = LayoutSize.Expand,
-            modifier = Spacing(20.dp)
-        ) {
-            Row(
+    MaterialTheme(colors = lightThemeColors) {
+        Surface(color = +themeColor { background }) {
+            Column(
                 crossAxisSize = LayoutSize.Expand,
-                mainAxisSize = LayoutSize.Expand,
-                mainAxisAlignment = MainAxisAlignment.SpaceBetween
+                modifier = Spacing(20.dp)
             ) {
-                Button(
-                    text = "Adicionar",
-                    onClick = {
-                        ContactList.list += Contact(count.value, "Contato ${count.value}")
-                        count.value++
-                    })
-                Button(
-                    text = "Remover",
-                    onClick = {
-                        count.value--
-                        ContactList.list -= ContactList.list[ContactList.list.lastIndex]
-                    },
-                    style = TextButtonStyle()
-                )
-            }
-            ContactList.list.forEach() {
-                ContactCard(contact = it)
+                Row(
+                    mainAxisSize = LayoutSize.Expand,
+                    mainAxisAlignment = MainAxisAlignment.SpaceBetween
+                ) {
+                    Button(
+                        text = +stringResource(R.string.add_btn_text),
+                        onClick = {
+                            ContactList.list += Contact(
+                                count.value,
+                                "Contato ${count.value}"
+                            )
+                            count.value++
+                        })
+                    Button(
+                        text = +stringResource(R.string.remove_btn_text),
+                        onClick = {
+                            count.value--
+                            ContactList.list -= ContactList.list[ContactList.list.lastIndex]
+                        },
+                        style = TextButtonStyle()
+                    )
+                }
+                ContactList.list.forEach() {
+                    ContactCard(contact = it)
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun ContactCard(contact: Contact) {
